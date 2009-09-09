@@ -236,7 +236,7 @@ function libcs($cid, $data, $tag = NULL) {
 }
 
 function libsettag($tag) { // увеличиваем значение тэга, инвалидируя этим все зависящие от него кэши.
-  if (function_exists(dmemcache_add))
+  if (function_exists(dmemcache_set))
     dmemcache_set($tag, time(), CACHE_PERMANENT, librusec);
 }
 
