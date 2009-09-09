@@ -82,7 +82,7 @@ function libStat($f='', $f2 = '') {
   
   switch ($f) {
     case 'about':
-      $r = "<p>Основа - свободная CMS Drupal версия 6.9(<a href=http://drupal.org>http://drupal.org</a>) + руссификация интерфейса (<a href=http://drupal.ru>http://drupal.ru</a>) + <a href=/allbooks>модуль Либрусек.</a>.<ol>Установленные модули Друпала:";
+      $r = "<p>Основа - свободная CMS Drupal версия 6.9(<a href=http://drupal.org>http://drupal.org</a>) + русификация интерфейса (<a href=http://drupal.ru>http://drupal.ru</a>) + <a href=/allbooks>модуль Либрусек.</a>.<ol>Установленные модули Друпала:";
       $sth = SELECT ("name FROM `system` WHERE `type` LIKE 'module' AND `status` = 1 ORDER BY 1");
        while ($a1 = dbf($sth)) $r .= "<li>".$a1->name;
       $r .= "</ol>\n
