@@ -1108,7 +1108,7 @@ function MakeZipFile($b, $dtp) {
   }
   if ($dtp == 'fb2' || $dtp == '') {
     if (!libGenerateFB2(getfb2filepath($b), $r)) 
-      exec ("ln ".getfb2filepath($b)." \"$r\"");
+      exec ("ln -s ../".getfb2filepath($b)." \"$r\"");
     exec ("zip -mj \"$zip\" \"$r\"");
   } else {  
     if ($err = MakeFile($b, getfb2filepath($b), $dtp, $r)) {
