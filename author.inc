@@ -391,7 +391,7 @@ function libAvtorAddBook($a) {
   if (!file_exists($dir)) system ("mkdir '$dir'");
   if ($filetype === 'fb2' || $filetype === 'zip' || $filetype === 'rar') {
     if (preg_match('/\.zip$/',$fname)) $packer = "unzip -jo -d '$dir' '$tname'";
-    elseif (preg_match('/\.rar$/',$fname)) $packer = "unrar e -y '$tname' '$dir'";
+    elseif (preg_match('/\.rar$/',$fname)) $packer = "unrar e -y '$tname' '$dir/'";
     else $packer = '';
     if ($packer) {
       $r .= "<hr>".system($packer)."<hr>";
