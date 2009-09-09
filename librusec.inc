@@ -140,6 +140,11 @@ function Sel($st) {
   return db_result(SELECT($st, $args));
 }
 
+function getfb2filepath($b) {
+ $md5 = Sel("md5 FROM libbook WHERE bookid = $b");
+ return "b/".substr($md5, 0, 2)."/$b.fb2";
+}
+
 function dbf ($s) { 
   return db_fetch_object($s);
 }
@@ -1092,7 +1097,7 @@ function MakeZipFile($b, $dtp) {
   } else { 
     $zip = "$r.zip";
   }  
-//  if (file_exists($zip) && (filemtime($zip) < filemtime("b/$b.fb2") || filemtime($zip) < filemtime("modules/librusec/book.inc") || $user->uid == 1)) unlink ($zip);
+//  if (file_exists($zip) && (filemtime($zip) < filemtime(getfb2filepath($b)) || filemtime($zip) < filemtime("modules/librusec/book.inc") || $user->uid == 1)) unlink ($zip);
   if (file_exists($zip)) return $zip;
   if (Sel("Broken FROM libbook WHERE BookId = %d", $b)) return '';
   $key = sem_get($b%5 + 1, 30);
@@ -1102,11 +1107,11 @@ function MakeZipFile($b, $dtp) {
     return $zip;
   }
   if ($dtp == 'fb2' || $dtp == '') {
-    if (!libGenerateFB2("b/$b.fb2", $r)) 
-      exec ("ln b/$b.fb2 \"$r\"");
+    if (!libGenerateFB2(getfb2filepath($b), $r)) 
+      exec ("ln ".getfb2filepath($b)." \"$r\"");
     exec ("zip -mj \"$zip\" \"$r\"");
   } else {  
-    if ($err = MakeFile($b, "b/$b.fb2", $dtp, $r)) {
+    if ($err = MakeFile($b, getfb2filepath($b), $dtp, $r)) {
       drupal_set_message($err);
       watchdog('librusec', "Ошибка создания файла $zip: $err");
       $zip = '';

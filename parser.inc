@@ -225,7 +225,7 @@ function libParserData($parser, $E) {
 
 function libRead($b) {
   if (Sel("FileType FROM libbook WHERE BookId = $b") != 'fb2') return 'Ошибочка вышла';
-  $fb2 = "b/$b.fb2";
+  $fb2 = getfb2filepath($b);
   $html = "b.htm/$b.htm";
   if (SuperUser() || !file_exists($html)) {
     $key = sem_get(14, 30);
@@ -301,7 +301,7 @@ function parse_fb2_document_info($f) {
 }
 
 function MakeFile($b, $f, $dtp, $r) {
-  $fb2 = "b/$b.fb2";
+  $fb2 = getfb2filepath($b);
   switch ($dtp) {
     case 'txt':
     case 'html':

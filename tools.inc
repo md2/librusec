@@ -270,10 +270,10 @@ function libTools() {
       $r = "<ol>"; 
       while ($a1 = dbf($sth)) {
         $b = $a1->BookId;
-        $xml = simplexml_load_file("b/$b.fb2");
+        $xml = simplexml_load_file(getfb2filepath($b));
         if (!$xml) {
           $r .= "<li>$b <pre>".print_r(libxml_get_last_error(),1)."</pre>";
-          system ("cp b/$b.fb2 tofix/$b.fb2");
+          system ("cp ".getfb2filepath($b)." tofix/$b.fb2");
         }  
      }
      return $r."</ol>".theme('pager');

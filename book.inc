@@ -118,7 +118,7 @@ document.write('<img src=\"http://ad1.edu-all.ru/bb.cgi?cmd=ad&pubid=' + userid 
       return "Файл достаточно хорош. Нет смысла в его улучшении<br><br>".
              SelectQuality($b, $user->uid).($book->FileType == 'fb2' ? 
                "<br><b>FB2 document-info</b>:<br>".
-               parse_fb2_document_info("b/$b.fb2"):'');
+               parse_fb2_document_info(getfb2filepath($b)):'');
     if (function_exists($f = "libBook$f"))
       return $f($b, $book);
     return "Непонятный вызов $f($b)";  
@@ -373,7 +373,7 @@ function libBookEdit($b) {
      if (!$ann) $r .= " отсутствует";
      else $r .= "$ann\n";
      if ($a1->FileType == 'fb2') 
-       $r .= "<br><b>FB2 document-info</b>:<br>".parse_fb2_document_info("b/$b.fb2");
+       $r .= "<br><b>FB2 document-info</b>:<br>".parse_fb2_document_info(getfb2filepath($b));
   
   $r .= "<br><a href=$link>Добавить/исправить аннотацию</a>";
   $r .= "<br>Возможные варианты:"; 
@@ -661,8 +661,8 @@ function libBookMail($b) {
 function libBookRAW($b) {
   $a1 = S("* FROM libbook WHERE BookId = $b");
   if ($a1->FileType != 'fb2') return 'Увы, не потдерживается исправление не-fb2 книг. Сконвертируйте в fb2 и перезалейте';
-  $raw = file_get_contents("b/$b.fb2");
-  if (!$raw) return "Файл b/$b.fb2 не прочитался.";
+  $raw = file_get_contents(getfb2filepath($b));
+  if (!$raw) return "Файл ".getfb2filepath($b)." не прочитался.";
   if (stripos (substr($raw, 0, 128), 'encoding="windows-1251"')) 
     $raw = iconv('windows-1251', 'utf8',$raw);
   $i1 = stripos($raw, '<FictionBook');  
@@ -732,7 +732,7 @@ function libBookBlock($b, $book) {
 
 function libBookValidate($b) {
   include_once drupal_get_path('module', 'librusec').'/validator.inc';
-  $v = validate("b/$b.fb2");
+  $v = validate(getfb2filepath($b));
   return "Проверка файла $b.fb2: $v->s";
 }
 function libUnblockMes($book) {

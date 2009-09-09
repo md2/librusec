@@ -695,7 +695,7 @@ WHERE Title LIKE \"$t%\" AND FileType = '$filetype' AND LastName = \"$ln\" AND N
   if ($srclang && $srclang != $lang) Insert(libsrclang, "BookId, SrcLang", "%d, '%s'", $b, $srclang);
   chmod($nn1, 0644);
   if ($filetype == 'fb2') {
-    rename ($nn1, "b/$b.fb2"); 
+    rename ($nn1, getfb2filepath($b)); 
   } else {
     Insert (libfilename, "BookId, FileName", "$b, \"$nn\"");
   }  

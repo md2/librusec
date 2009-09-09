@@ -170,7 +170,7 @@ break;
         xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, 0);
         xml_set_element_handler($xml_parser, f1, f2);
         xml_set_character_data_handler($xml_parser, f3);
-        if (!$fp = fopen($fb2 = "b/$b.fb2", "r")) 
+        if (!$fp = fopen($fb2 = getfb2filepath($b), "r")) 
            return "Ошибочка: не открылся файлик $fb2 ".bl($a1->BookId); 
         xml_parse($xml_parser, $d=fread($fp, 2000), 1);
         xml_parser_free($xml_parser); 
@@ -185,7 +185,7 @@ break;
     case lang:
       $sth = SELECT("BookId FROM libbook WHERE lang <> 'ru' AND FileType = 'fb2' LIMIT 22222"); 
       while ($a1=dbf($sth)) {
-        $fh = fopen("b/$b.fb2", 'r');
+        $fh = fopen(getfb2filepath($b), 'r');
         $Data = fread($fh, 4000);
         fclose($fh);
         if (preg_match('/<lang>(..)<.lang>/', $Data, $m)) {
@@ -260,7 +260,7 @@ break;
       $sth = pager_query("SELECT BookId FROM libbook WHERE FileType = 'fb2' ORDER BY 1", 1000);
       while ($a1 = dbf($sth)) {
         $b = $a1->BookId;
-        $xml = simplexml_load_file("b/$b.fb2");
+        $xml = simplexml_load_file(getfb2filepath($b));
         if (!$xml) $r .= "<li>$b <pre>".print_r(libxml_get_last_error(),1)."</pre>";
      }
     case memcache:
@@ -325,7 +325,7 @@ function procallbooks(&$context) {
     $b = $a1->BookId;
     fprintf($f, "$b:$b->FileType ");
     if ($a1->FileType == 'fb2') {
-      $fn = "b/$b.fb2";
+      $fn = getfb2filepath($b);
     } else {  
       $fn = "b.usr/".Sel("FileName FROM libfilename WHERE BookId = %d", $b);
     }  
@@ -383,7 +383,7 @@ function find_translators(&$context) {
     $b = $a1->BookId;
     fprintf($f, " $b ");
     if (Sel ("TranslatorId FROM libtranslator WHERE BookId = $b")) continue;
-    if ($e = parsefb2("b/$b.fb2", $b, 'head')) { fprintf($f, $e);exit;}
+    if ($e = parsefb2(getfb2filepath($b), $b, 'head')) { fprintf($f, $e);exit;}
     Global $PD;
     if ($PD->TranslatorIds)
     foreach ($PD->TranslatorIds as $aid) {
@@ -448,7 +448,7 @@ function libCheckSchema($b1, $b2) {
     $sth = SELECT("BookId FROM libbook WHERE NOT Deleted&1 AND BookId >= $b1 AND BookId <= $b2");
     while ($a1 = dbf($sth)) {
       $b = $a1->BookId;
-      $r .= "<li><a href=/b/$b>$b</a> ".validate("b/$b.fb2");
+      $r .= "<li><a href=/b/$b>$b</a> ".validate(getfb2filepath($b));
     }  
   } else {
     foreach (glob("2do/*") as $fb2) 
