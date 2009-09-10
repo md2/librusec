@@ -377,7 +377,7 @@ function libAvtorAddBook($a) {
     $ext=$filetype;
   }
   if (!$filetype && $ext) {
-    $r .= "<p>Неуказан тип файла. Используем $ext"; 
+    $r .= "<p>Не указан тип файла. Используем $ext"; 
     $filetype = $ext;
   }
   if (!$filetype || !$ext) return "Непонятки с типом файла. Перезалейте.";
@@ -621,7 +621,7 @@ function AddFileToLibrusec($f, $ext, $a, $blocka = '') {
   if ($fs < 4999 && !user_access('библиотекарь')) return "Файл не найден или очень уж мал. Стихи и прочую мелочь просьба собирать в сборники килобайт хотя бы по сто.";
   if ($PD->AvtorIds[0]) $a = $PD->AvtorIds[0]; else $PD->AvtorIds[0] = $a;
 
-  $r .= " Наменование: $title<br>";
+  $r .= " Наименование: $title<br>";
 //Попытаемся выловить дубли. Может, получится. Будем надеяться. Дубли - это наша беда. Да.
   $t = trim(preg_replace('/\(.+\d+\s*\)/','',$title));
   $t = preg_replace('/…/','',$t); 
