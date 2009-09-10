@@ -1,0 +1,59 @@
+		Установка движка либрусека на Debian 5.01 (Lenny)
+
+(Предполагается, что уже установлены и настроены mysql-server, apache2, php5, etc.
+  # apt-get install mysql-client mysql-server apache2 ...
+  и т. д.)
+
+Итак:
+
+# apt-get install drupal6
+# cd /usr/share/drupal6
+# mkdir -p b b.fb2 b.htm b.html b.tmp b.txt b.usr cache/g cache/new i ocr schema
+# for i in {0..255}; do
+    mkdir b/`printf %02x $i`;
+  done
+# chown -R www-data:www-data b b.fb2 b.htm b.html b.tmp b.txt b.usr cache cache/g cache/new i ocr
+# sed -i '/RewriteBase \/$/a \
+  RewriteCond %{REQUEST_URI} ^/b/ [OR] \
+  RewriteCond %{REQUEST_URI} =/b \
+  RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]' \
+  .htaccess
+# cat > /etc/drupal/6/apache.conf <<EOF
+<VirtualHost <YOUR_IP>:80>
+        DocumentRoot /usr/share/drupal6
+        <Directory />
+                Options FollowSymLinks
+                AllowOverride None
+        </Directory>
+        <Directory /usr/share/drupal6>
+                Options Indexes FollowSymLinks -MultiViews
+                AllowOverride FileInfo Indexes Limit Options
+                Order allow,deny
+                allow from all
+        </Directory>
+</VirtualHost>
+EOF
+# invoke-rc.d apache2 restart
+# mysql -uroot -p drupal6 < /path/to/schema.sql
+
+Далее:
+
+0. распаковать модули librusec и bwlist в modules/librusec и modules/bwlist соответственно.
+1. скопировать схему fb2 2.21 (FictionBook2.21.xsd и прочие *.xsd) в /usr/share/drupal6/schema.
+2. зайти на http://<YOUR_IP>/install.php, завершить установку друпала.
+3. залогиниться как uid 1.
+4. включить модуль либрусека и другие по желанию: http://<YOUR_IP>/admin/build/modules
+5. создать роль администратора (опционально): http://<YOUR_IP>/admin/user/roles
+6. настроить права ролей пользователей: http://<YOUR_IP>/admin/user/permissions
+7. настроить либрусек: http://<YOUR_IP>/admin/settings/librusec
+8. ???????
+9. PROFIT!
+
+Примечания:
+
+0. <YOUR_IP> нужно всюду заменить на ваш IP.
+
+
+Как-то так.
+Привет.
+
