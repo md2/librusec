@@ -989,7 +989,7 @@ function libOpenCacheFile($CacheFile, $tm) {
     $key = 0;
     return 0;
   }  
-  if ($CacheIsbossiple && (time() - 1*filemtime($CacheFile) < $tm || LA() > 1)) return 0;
+  if ($CacheIsPossible && (time() - 1*filemtime($CacheFile) < $tm || LA() > 1)) return 0;
   return fopen($CacheFile, 'w');
 }
 
