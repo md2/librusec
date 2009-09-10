@@ -1091,6 +1091,7 @@ function ul($u) {
 function MakeZipFile($b, $dtp) {
   Global $user;
   $FileName = MakeFileName($b);
+  if (!$dtp) $dtp = 'fb2';
   $r = "b.$dtp/$FileName.$dtp";
   if ($dtp == 'epub') {
    $zip = $r;
