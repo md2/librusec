@@ -653,7 +653,6 @@ WHERE Title LIKE \"$t%\" AND FileType = '$filetype' AND LastName = \"$ln\" AND N
   else $avtors = AvtorName($a);
   $outname = str_replace('/','_',translitcyr($avtors.' '.$title));
   $r .= " file:$outname<br>";
-  $fff = "b/$outname.fb2";
   if ($BookId) 
     if ($fs == Sel("FileSize FROM libbook WHERE BookId = $BookId")) 
       return "<br>Книга уже есть в библиотеке - ".libAddDubl($f, $BookId, $blocka, $a);
