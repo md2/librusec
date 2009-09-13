@@ -570,8 +570,8 @@ function AddFileToLibrusec($f, $ext, $a, $blocka = '') {
   if (!$md5) return $r . " ошибка подсчёта md5";
   if ($b = Sel("BookId FROM libbook WHERE md5 = '%s'", $md5)) {
     if (Sel("FileType FROM libbook Where BookId = $b") == 'fb2') {
-      if (file_exists("b/$b.fb2"))
-        return "<br>Книга уже есть в библиотеке (b/$b.fb2) - ".libAddDubl($f, $b, $blocka, $a);
+      if (file_exists(getfb2filepath($b)))
+        return "<br>Книга уже есть в библиотеке (".getfb2filepath($b).") - ".libAddDubl($f, $b, $blocka, $a);
       RemoveBook($b);
     } else {
       return "<br>Книга уже есть в библиотеке - ".libAddDubl($f, $b, $blocka, $a);
@@ -637,7 +637,7 @@ function AddFileToLibrusec($f, $ext, $a, $blocka = '') {
     if (!$oldver) $oldver = 1;
     $ver = $PD->head['FICTIONBOOK/DESCRIPTION/DOCUMENT-INFO/VERSION'];
     if (!$ver) $ver = 1;
-    if (1*$oldver >= 1*$ver && file_exists("b/$BookId.fb2") )
+    if (1*$oldver >= 1*$ver && file_exists(getfb2filepath($BookId)))
       return $r.libAddDubl($f, $BookId, $blocka, $a)." Версия не лучше: $oldver:$ver<br>";
   } 
   foreach($PD->AvtorIds as $aid) {
