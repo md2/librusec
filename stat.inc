@@ -129,7 +129,7 @@ function libStat($f='', $f2 = '') {
       } else {
         $BGLIST = "WHERE";
       }
-      $q = "SELECT N, BookId FROM libbook $BGLIST NOT Deleted&1 $GROUP ORDER BY 1 DESC";
+      $q = "SELECT N, BookId FROM libbook $BGLIST NOT Deleted&1 AND N>0 $GROUP ORDER BY 1 DESC";
       $count = "SELECT count(*) FROM libbook $BGLIST NOT Deleted&1";
       $sth = pager_query($q, 100, 0, $count);
       while ($a1=dbf($sth)) {  
@@ -225,7 +225,7 @@ function libStat($f='', $f2 = '') {
        $r = "<ul>";
 //     $n = Sel ("count (DISTINCT AvtorId) FROM liblog JOIN libavtor USING (BookId)") - 2;
        $n = 20000;
-       $sth = pgq ("SELECT SUM(N) as N, AvtorId FROM `libbook` JOIN libavtor USING (BookId) GROUP BY AvtorId ORDER BY 1 DESC", $n);
+       $sth = pgq ("SELECT SUM(N) as N, AvtorId FROM `libbook` JOIN libavtor USING (BookId) GROUP BY AvtorId HAVING SUM(N)>0 ORDER BY 1 DESC", $n);
        while ($a1=dbf($sth)) $r .=  "<li>$a1->N: ".avl($a1->AvtorId);
        $r .= "</ul>";
     break;
