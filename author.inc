@@ -691,7 +691,6 @@ WHERE Title LIKE \"$t%\" AND FileType = '$filetype' AND LastName = \"$ln\" AND N
   $actionid = Sel ("ActionId FROM libactions WHERE ActionDesc = 'Add book' AND ActionSQL = \"$Action\" ORDER BY ActionId DESC LIMIT 1" );
   watchdog('librusec', "SELECT ActionId FROM libactions WHERE ActionDesc = 'Add book' AND ActionSQL = \"$Action\" ORDER BY ActionId DESC LIMIT 1");
   if (!$actionid) $actionid = Sel("ActionId FROM libactions WHERE ActionDesc = 'Add book' AND ActionSQL like '%$md5%' ORDER BY ActionId DESC LIMIT 1");
-  sleep(100);
   $b = Sel("BookId FROM libbook WHERE md5 = '$md5'");
   if (!$b) return $r. "Что-то не получилось. Свяжитесь с администрацией<br>";
   if ($actionid) Update(libactions, "BookId=$b", "ActionId=$actionid");
