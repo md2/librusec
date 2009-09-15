@@ -1,0 +1,160 @@
+<?php
+// $Id$
+
+function bwlist_menu() {
+  return array (
+    'bwlist' => array('title' => t('Black white list'), 'page callback' => 'bwlist', 'access arguments' =>  array('access content'))
+  );
+}
+
+function bwlist_icons($u) {
+  Global $user;
+  if (!$user->uid || !$u) return '';
+  $path = '/'.drupal_get_path('module', 'bwlist');
+  $icon1 = l("<img src='$path/user-option-remove.png' border=0 alt='".t('Put user to the black list')."'>", "bwlist/black/$u", array('html' => TRUE));
+  $icon2 = l("<img src='$path/user-option-add.png'    border=0 alt='".t('Put user to the white list')."'>", "bwlist/white/$u", array('html' => TRUE));
+  $icon3 = l("<img src='$path/user-plain-blue.png'    border=0 alt='".t('Delete user from any list')."'>",  "bwlist/clean/$u", array('html' => TRUE));
+  $bw = db_result(db_query("SELECT bw FROM {bwlist} WHERE uid = %d AND uid2 = %d", $user->uid, $u));
+  if ($bw == 'b') return $icon3.$icon2;
+  if ($bw == 'w') return $icon1.$icon3;
+  return $icon1.$icon2;
+}  
+
+function bwlist_mode() {
+  Global $user;
+  if (!$user->uid) return '';
+  return db_result(db_query("SELECT bw FROM {bwlist} WHERE uid = %d AND uid2 = 0", $user->uid));
+}  
+
+function bwlist_status($c) {
+  Global $user;
+  if (!$user->uid) return '';
+  return !db_result(db_query("SELECT bw FROM {bwlist} WHERE uid = %d AND uid2 = %d", $user->uid, -$c));
+}
+
+/*
+* Return TRUE if curren user can see content class $c from the user $u2
+*/
+
+function bwlist_see($u2, $c = 0) {
+  Global $user;
+  if (!$user->uid || !$u2) return TRUE;
+  $mode = bwlist_mode();
+  if (!$mode) return TRUE;
+  if ($c AND bwlist_status($c)) return TRUE;
+  $status = db_result(db_query("SELECT bw FROM {bwlist} WHERE uid = %d AND uid2 = %s", $user->uid, $u2));
+  if ($mode == 'b' and $status == 'b') return FALSE;
+  if ($mode == 'w' and $status != 'w') return FALSE;
+  return TRUE;
+}
+
+function bwlist($action = '', $u2 = 0) {
+  Global $user;
+  $path = '/'.drupal_get_path('module', 'bwlist');
+  $legend = '<h2>'.t('Icon value:').'</h2>';
+  $legend .= "<img src='$path/user-option-remove.png' border=0> ".t('Add to the black list');
+  $legend .= "<br><img src='$path/user-option-add.png' border=0> ".t('Add to the white list');
+  $legend .= "<br><img src='$path/user-plain-blue.png' border=0> ".t('Delete from any list');
+  $legend .= '<h2>'.t('Filter:').'</h2>';
+  $secnames = array (1 => t('Blog/forum posts'), 2 => t('Comments'), 3 => t('Впечатления о книгах'));
+  for ($i = 1; $i <= 3; $i++) {
+    $legend .= '<br><b>';
+    $legend .= bwlist_status($i) ? "<a href=/bwlist/off/$i>(".t('Switch OFF for') : "<a href=/bwlist/on/$i>(".t('Switch ON for');
+    $legend .= ")</a></b> ".$secnames[$i]."\n";  
+  }    
+  $u = $user->uid; //Current user
+  if (!$u) return t('No service for anonimous, sorry');
+  if ($u2 > 0) {
+    switch ($action) {
+      case 'off':
+        db_query("INSERT INTO {bwlist} (uid, uid2, bw) VALUES(%d, %d, 1) ON DUPLICATE KEY UPDATE bw=1", $u, -$u2);
+      break;
+      case 'on':
+        db_query('DELETE FROM {bwlist} WHERE uid = %d AND uid2 = %d', $u, -$u2);
+      break;
+      case 'black':
+      case 'white':
+        db_query("INSERT INTO {bwlist} (uid, uid2, bw) VALUES(%d, %d, '%s') ON DUPLICATE KEY UPDATE bw='%s'", $u, $u2, $action, $action);
+      break;
+      case 'clean':
+        db_query("DELETE FROM {bwlist} WHERE uid = %d AND uid2 = %d", $u, $u2);
+      break;
+      case 'show':
+        $u = $u2;
+      break;
+    }
+  }
+  if ($action == 'use') {
+    db_query("DELETE FROM {bwlist} WHERE uid = %d AND uid2 = 0", $u); 
+    switch ($u2) {
+      case 'black':
+      case 'white':
+        db_query("INSERT INTO {bwlist} (uid, uid2, bw) VALUES(%d, 0, '%s')", $u, $u2);
+      break;  
+    }
+  }
+  $result = db_query("SELECT uid2, bw FROM {bwlist} WHERE uid = %d AND uid2 > 0", $u);
+  while ($data = db_fetch_object($result)) {
+    $u2 = $data->uid2;
+    $list[$data->bw] .= bwlist_icons($u2).theme('username', user_load(array('uid' => $u2))).'<br>'; 
+  }
+  
+  if (empty($list['b'])) $list['b'] = t('Empty');
+  if (empty($list['w'])) $list['w'] = t('Empty');
+  if ($u == $user->uid) {
+    $mode = db_result(db_query("SELECT bw FROM {bwlist} WHERE uid = %d AND uid2 = 0", $user->uid));
+    if ($mode != 'w') $usew = ' '.l(t('(Switch ON)'), 'bwlist/use/white'); else $usew = ' '.l(t('(Switch OFF)'), 'bwlist/use/off');
+    if ($mode != 'b') $useb = ' '.l(t('(Switch ON)'), 'bwlist/use/black'); else $useb = ' '.l(t('(Switch OFF)'), 'bwlist/use/off');
+  }  
+  return $legend.$useo.
+  '<table><tr><th>'.t('Белый список').$usew.'<th>'.t('Чёрный список').$useb.
+  "<tr><td valign=top>$list[w]<td valign=top>$list[b]</table>";
+}
+
+function bwlist_makewhere($id) {
+  Global $user;
+  $sth = db_query("SELECT uid2 FROM {bwlist} WHERE uid = %d AND uid2 > 0 AND bw = 'b'", $user->uid);
+  while ($a1 = db_fetch_object($sth)) {
+    if ($bl) $bl .= " AND ";
+    $bl .= "$id <> $a1->uid2";
+  }
+  return $bl;
+}
+
+function bwlist_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
+  Global $user;
+  $mode = bwlist_mode();
+  if ($mode) {
+    if ($primary_field == 'nid' AND bwlist_status(1)) {
+      if ($mode == 'w') {
+        if ($primary_table == 'nc') $sql['join'] = 'JOIN {bwlist} ON (nc.last_comment_uid=bwlist.uid2)';
+        else $sql['join'] = 'JOIN {bwlist} ON (n.uid=bwlist.uid2)';
+        $sql['where'] = "bwlist.uid = $user->uid";
+      }
+      if ($mode == 'b') {
+        if ($primary_table == 'nc') $sql['where'] = bwlist_makewhere('last_comment_uid');
+        else $sql['where'] = bwlist_makewhere('n.uid');
+      }
+    }
+    if ($primary_field == 'cid' AND bwlist_status(2)) {
+      if ($mode == 'b') {
+        $sql['where'] = bwlist_makewhere('c.uid');
+      }  
+      if ($mode == 'w') {
+        $sql['join'] = 'JOIN {bwlist} ON (c.uid=bwlist.uid2)';
+        $sql['where'] = "bwlist.uid = $user->uid";
+      }
+    }
+    return $sql;
+  }  
+}
+
+function bwlist_user($op, &$edit, &$u) {
+  Global $user;
+  if ($op != 'view') return;
+  $u->content['summary']['bwlist'] =  array(
+      '#type' => 'user_profile_item',
+      '#title' => t('Черно-белый список'),
+      '#value' => "<a href=/bwlist/show/$u->uid>".t('Отмеченные пользователи').'</a>'.($u->uid == $user->uid ? '' : bwlist_icons($u->uid))
+  );
+}

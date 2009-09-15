@@ -1,0 +1,22 @@
+<?php
+
+function bwlist_install() {
+  drupal_install_schema('bwlist');   
+}
+
+function bwlist_uninstall() {
+  drupal_uninstall_schema('bwlist');
+}
+
+function bwlist_schema() {
+  return array(
+    bwlist => array(
+      'fields' => array(
+        'uid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+        'uid2' => array('type' => 'int', 'unsigned' => FALSE, 'not null' => TRUE),
+        'bw' => array('type' => 'char', 'length' => 1, 'not null' => TRUE),
+      ),
+      'primary key' => array('uid', 'uid2'),
+    ),
+  );
+}

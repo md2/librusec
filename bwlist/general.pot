@@ -1,0 +1,121 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  bwlist.module: n/a
+#  bwlist.info: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-01-08 18:04-0500\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: bwlist.module:6
+msgid "Black white list"
+msgstr ""
+
+#: bwlist.module:14
+msgid "Put user to the black list"
+msgstr ""
+
+#: bwlist.module:15
+msgid "Put user to the white list"
+msgstr ""
+
+#: bwlist.module:16
+msgid "Delete user from any list"
+msgstr ""
+
+#: bwlist.module:54
+msgid "Icon value:"
+msgstr ""
+
+#: bwlist.module:55
+msgid "Add to the black list"
+msgstr ""
+
+#: bwlist.module:56
+msgid "Add to the white list"
+msgstr ""
+
+#: bwlist.module:57
+msgid "Delete from any list"
+msgstr ""
+
+#: bwlist.module:58
+msgid "Filter:"
+msgstr ""
+
+#: bwlist.module:59
+msgid "Blog/forum posts"
+msgstr ""
+
+#: bwlist.module:59
+msgid "Comments"
+msgstr ""
+
+#: bwlist.module:59
+msgid "Впечатления о книгах"
+msgstr ""
+
+#: bwlist.module:62
+msgid "Switch OFF for"
+msgstr ""
+
+#: bwlist.module:62
+msgid "Switch ON for"
+msgstr ""
+
+#: bwlist.module:67
+msgid "No service for anonimous, sorry"
+msgstr ""
+
+#: bwlist.module:103;104
+msgid "Empty"
+msgstr ""
+
+#: bwlist.module:107;108
+msgid "(Включить)"
+msgstr ""
+
+#: bwlist.module:107;108
+msgid "(Выключить)"
+msgstr ""
+
+#: bwlist.module:111
+msgid "Белый список"
+msgstr ""
+
+#: bwlist.module:111
+msgid "Чёрный список"
+msgstr ""
+
+#: bwlist.module:157
+msgid "Черно-белый список"
+msgstr ""
+
+#: bwlist.module:158
+msgid "Отмеченные пользователи"
+msgstr ""
+
+#: bwlist.module:0
+msgid "bwlist"
+msgstr ""
+
+#: bwlist.info:0
+msgid "Black/white list"
+msgstr ""
+
+#: bwlist.info:0
+msgid "Creates lists of ignored users (black list) or non-ignored (white list) for each user."
+msgstr ""
+

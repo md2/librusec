@@ -1,0 +1,4 @@
+; $Id$
+name = Black/white list
+description = Creates lists of ignored users (black list) or non-ignored (white list) for each user. 
+core = 6.x
