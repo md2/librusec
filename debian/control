@@ -1,0 +1,13 @@
+Source: librusec
+Section: web
+Priority: extra
+Maintainer: MD <4d876b82@gmail.com>
+Build-Depends: cdbs, debhelper (>= 7)
+Standards-Version: 3.7.3
+Homepage: http://github.com/md2/librusec
+
+Package: librusec
+Architecture: all
+Depends: apache2, drupal6, mysql-server-5.0, php5, ${misc:Depends}
+Description: librusec module of the library
+ -

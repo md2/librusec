@@ -1,0 +1,32 @@
+#!/bin/sh
+# postrm script for librusec
+#
+# see: dh_installdeb(1)
+
+set -e
+
+case "$1" in
+    remove)
+	rm -f /etc/apache2/conf.d/librusec.conf
+	invoke-rc.d apache2 reload
+    ;;
+    purge)
+    	for dir in b b.fb2 b.htm b.html b.tmp b.txt b.usr cache i ocr; do
+		rm -rf /usr/share/drupal6/$dir;
+	done
+	rm -f /usr/share/drupal6/.htaccess
+	if [ -f /etc/drupal/6/htaccess ]; then
+		ln -s /etc/drupal/6/htaccess /usr/share/drupal6/.htaccess
+	fi
+# FIXME: drop tables
+	rm -f /etc/apache2/conf.d/librusec.conf
+	rm -f /usr/share/drupal6/AJAX.php
+	invoke-rc.d apache2 reload
+    ;;
+esac
+
+#NO DEBHELPER#
+
+exit 0
+
+

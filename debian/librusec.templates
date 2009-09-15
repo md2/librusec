@@ -1,0 +1,8 @@
+
+Template: librusec/mysql_root_password
+Type: password
+Description: Password for the MySQL "root" user:
+ 
+Description-ru.UTF-8: Пароль для MySQL пользователя "root"
+ 
+
