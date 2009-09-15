@@ -109,7 +109,7 @@ function extra_validate ($dom) {
         $validate_errors->n++;
       }
     } else {
-      # href вез соответствующего id
+      # href без соответствующего id
       $ln = substr($link, 1);
       if (!in_array($ln, $ids)) {
         $validate_errors->s .= "<b>ERROR:</b> bad internal link: <b>$link</b>.<br />\n";
