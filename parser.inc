@@ -36,7 +36,7 @@ function libParserStart($parser, $E, $attrs) {
     return;
     case 'BODY':
       if ($attrs['name'] == 'notes') $PD->IN['NOTES'] = 1;
-      if ($PD->format == 'head') $PD->done = 1;
+      if ($PD->format == 'head' || $PD->format == 'fbd-head') $PD->done = 1;
     return;
     case 'ANNOTATION':
      return;
@@ -53,7 +53,7 @@ function libParserStart($parser, $E, $attrs) {
       if (!$img) return;
       if (preg_match('/^#(.+)/', $img, $m)) { //картинка внутри файла
         $img = $m[1];
-        if ($PD->format == 'htm') $img = "/i/".($PD->b%100)."/$PD->b/$img";
+        if ($PD->format == 'htm' || $PD->format == 'fbd') $img = "/i/".($PD->b%100)."/$PD->b/$img";
       } 
       if ($img == $PD->cover) return; // обложку не повторяем
       if ($PD->format == 'txt') pp(" [Картинка: $img] ");
@@ -164,7 +164,7 @@ function libParserEnd($parser, $E) {
       $PD->IN['BODY'] = '';
     return;
     case 'HEAD':
-      if ($PD->format == 'head')
+      if ($PD->format == 'head' || $PD->format == 'fbd-head')
         $PD->done = 1;
     case 'ANNOTATION':
       if ($PD->format == 'annotation')
@@ -224,14 +224,20 @@ function libParserData($parser, $E) {
 }
 
 function libRead($b) {
-  if (Sel("FileType FROM libbook WHERE BookId = $b") != 'fb2') return 'Ошибочка вышла';
-  $fb2 = getfb2filepath($b);
+  $filetype = Sel("FileType FROM libbook WHERE BookId = $b");
+  if ($filetype != 'fb2') $fbd = libGetFBD("b.usr/".Sel("FileName FROM libfilename WHERE BookId = $b"));
+  else $fb2 = getfb2filepath($b);
   $html = "b.htm/$b.htm";
   if (SuperUser() || !file_exists($html)) {
     $key = sem_get(14, 30);
     if (!sem_acquire($key)) return;
     if (SuperUser() || !file_exists($html)) {     
-      $err = parsefb2($fb2, $b, 'htm', $html);
+      if ($fb2) {
+        $err = parsefb2($fb2, $b, 'htm', $html);
+      } else {
+        $err = parsefb2($fbd, $b, 'fbd');
+        touch($html);
+      }  
       if (!$err) {
         Global $PD;
         db_query("INSERT INTO libcache (BookId, TOC, Cover) 
@@ -262,11 +268,13 @@ function parsefb2($fb2, $b, $format, $tofile = '') {
   xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, 0);
   xml_set_element_handler($xml_parser, libParserStart, libParserEnd);
   xml_set_character_data_handler($xml_parser, libParserData);
-  if (!$fp = fopen($fb2, "r")) return "Ошибочка: не открылся файлик $fb2"; 
-
-  while (($data = fread($fp, 40960)) && xml_parse($xml_parser, $data) && !$PD->done && !feof($fp));
+  if ($format == 'fbd-head' || $format == 'fbd') {
+    xml_parse($xml_parser, $fb2);
+  } else {  
+    if (!$fp = fopen($fb2, "r")) return "Ошибочка: не открылся файлик $fb2"; 
+    while (($data = fread($fp, 40960)) && xml_parse($xml_parser, $data) && !$PD->done && !feof($fp));
+  }  
   xml_parser_free($xml_parser); 
-//  if (SuperUser()) {print('<pre>');print_r($PD);exit;}
   if (!$tofile) return;
   
   if (!$fh = fopen($tofile, 'w')) return "Не могу создать файлик $tofile";
@@ -382,3 +390,111 @@ return '';
             }  
             $xml->asXML($fb2);
           } 
+
+
+
+function libGetFBD($f) {
+  if (pathinfo($f, PATHINFO_EXTENSION) != 'zip') return '';
+  if (!is_resource($zip = zip_open($f))) return '';
+  while($zip_entry = zip_read($zip)) 
+    if (pathinfo(zip_entry_name($zip_entry), PATHINFO_EXTENSION) == 'fbd') 
+      return zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
+  return '';    
+}
+
+function XMLtag($tags) {
+  Static $lastlevel = 0;
+  if (!$tags) return '';
+  list($tag, $level, $option) = explode(' ', $tags, 3);  
+  if ($level != '') $lastlevel = $level;
+  else $level = $lastlevel;
+  $args = func_get_args();
+  array_shift($args); 
+  $value = rtrim(implode($args), "\n");
+  if (!$value && !$option) return '';
+  for ($i = 0; $i < $level; $i++) $s .= ' ';
+  if ($option) $option = ' '.$option;
+  if ($level >= 4) $value = htmlspecialchars($value);
+  if ($value) return "\n$s<$tag$option>$value".($level < 3 || $args[1] || $args[2] || $args[3] ? "\n$s":'')."</$tag>";
+  return "\n$s<$tag$option/>";
+}
+
+function libFDB($b) {
+//  drupal_set_header('Content-Type: text/plain');
+  $b1 = S("* FROM libbook WHERE BookId = %d", $b);
+  if (!$b) return '';
+  for ($sth = SELECT("GenreCode FROM libgenre JOIN libgenrelist USING(GenreId) WHERE BookId = %d", $b);$a1 = dbf($sth);)
+    $genre .= XMLtag('genre 3', $a1->GenreCode);
+  for ($sth = SELECT("SeqName, SeqNumb FROM libseq JOIN libseqname USING(SeqId) WHERE BookId = %d", $b);$a1 = dbf($sth);)
+    $sequence .= XMLtag('sequence 3 name="'.htmlspecialchars($a1->SeqName).'" number="'.$a1->SeqNumb.'"', $a1->GenreCode);
+  for ($sth = SELECT("* FROM libavtorname JOIN libavtor USING(AvtorId) WHERE BookId = %d", $b);$a1 = dbf($sth);)
+    $author .= XMLtag('author 3', 
+      XMLtag('first-name 4', $a1->FirstName), 
+      XMLtag('middle-name', $a1->MiddleName), 
+      XMLtag('last-name', $a1->LastName), 
+      XMLtag('nickname', $a1->NickName), 
+      XMLtag('home-page', $a1->Homepage), 
+      XMLtag('email', $a1->Email), 
+      XMLtag('id', $a1->AvtorId) 
+  );
+  for ($sth = SELECT("* FROM libavtorname JOIN libtranslator ON(AvtorId=TranslatorId) WHERE BookId = %d", $b);$a1 = dbf($sth);)
+    $author .= XMLtag('translator 3', 
+      XMLtag('first-name 4', $a1->FirstName), 
+      XMLtag('middle-name', $a1->MiddleName), 
+      XMLtag('last-name', $a1->LastName), 
+      XMLtag('nickname', $a1->NickName), 
+      XMLtag('home-page', $a1->Homepage), 
+      XMLtag('email', $a1->Email), 
+      XMLtag('id', $a1->AvtorId) 
+  );
+  if (!$cover = Sel("Cover FROM libcache WHERE BookId = $b")) {
+    $nid = Sel("nid FROM libbnode WHERE BookId = $b");
+    if ($nid) $vid = Sel("MAX(vid) FROM node_revisions WHERE nid = $nid");
+    if ($vid) $cover = Sel("filepath FROM `upload` JOIN files USING(fid) WHERE `vid` = $vid AND filemime LIKE 'image%'");
+  }
+  $cover = ltrim($cover, '/');
+  if ($cover && file_exists($cover)) {
+    $imagetype = pathinfo($cover, PATHINFO_EXTENSION);
+    if ($imagetype == 'jpg') $contenttype = 'image/jpeg';  
+    else $contenttype = 'image/'.$imagetype;  
+    $coverfile = htmlspecialchars(pathinfo($cover, PATHINFO_BASENAME));
+    $binary = 'binary 1 id="'.$coverfile.'" content-type="'.$contenttype.'"';
+    $coverpage = XMLtag('coverpage', '<image l:href="#'.$coverfile.'"/>');
+  }  
+  $ann = trim(Sel("body FROM node_revisions JOIN libbnode USING(nid) WHERE BookId = %d ORDER BY vid DESC", $b));
+  if (strncmp($ann, '<p>', 3) && strncmp($ann, '<P>', 3)) $ann = "<p>$ann</p>";
+  return '<?xml version="1.0" encoding="utf-8"?>'.
+  XMLtag('FictionBook 0 xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"', 
+    XMLtag('description 1', 
+      XMLtag('title-info 2', 
+        $genre, 
+        $author, 
+        XMLtag('book-title 3', $b1->Title), 
+        XMLtag('annotation', $ann), 
+        XMLtag('keywords', $b1->keywords),
+        ($b1->Year ? XMLtag("date 3", $b1->Year) : ''),
+        $coverpage,
+        XMLtag('lang', $b1->Lang),
+        XMLtag('src-lang', Sel("SrcLang FROM libsrclang WHERE BookId = %d", $b)),
+        $translator, 
+        $sequence
+      ),
+      XMLtag('src-title-info 2'),
+      XMLtag('document-info 2', 
+        XMLtag('author 3', XMLtag('nickname', 'robot') ),
+        XMLtag('program-used'),
+        XMLtag('date'),
+        XMLtag('src-url'),
+        XMLtag('src-ocr'),
+        XMLtag('id', "LibrusecId-$b"),
+        XMLtag('version', 1),
+        XMLtag('history'),
+        XMLtag('publisher')
+      ),
+      XMLtag('publish-info 2'),
+      XMLtag('custom-info 2 info-type="librusec-id"', $b)
+    ),
+    XMLtag('body 1', ''),
+    XMLtag($binary, "\n", base64_encode(file_get_contents($cover)))
+  );
+}

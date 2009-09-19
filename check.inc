@@ -708,3 +708,4 @@ $min_memory_needed = $thread_usage + $global_buffer;
   echo "<tr><td><center<b>" . t('Tmp Table Size : ') . $memory_vars['tmp_table_size']->Value . "</b></center></td></tr>";
   echo "<tr><td><center<b>" . t('Read Rnd Buffer Size : ') . $memory_vars['read_rnd_buffer']->Value . "</b></center></td></tr>";
 }
+
