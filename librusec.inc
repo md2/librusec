@@ -618,19 +618,19 @@ function DoLibRow($b, $style='') {
       if ($a1->FileSize > 55553 && !Sel("BookId FROM `libtopadvert` WHERE BookId = $b")) {
         if (!$a) $a = $a1->a;
         if (!$a) $a = Sel("AvtorId FROM libavtor WHERE BookId = $b LIMIT 1");
-        $r .= "
-<textarea id=topadvert_open_div_$b disabled=true style='display: none'>
-title: Купить <b>$a1->Title</b>:
-feed_id: 2942
-pattern_id: 317
-format: 2
-book_author: ".AvtorName($a)."
-book_name: $a1->Title
-</textarea>
-&nbsp;
-<a href='http://lit.rus.ec/pages/biblio_search/?q=$a1->Title' 
-onmouseover=\"topadvert_open_div('topadvert_open_div_$b', event);\" onmouseout=\"topadvert_close_div('topadvert_open_div_$b')\">(купить)</a>
-";
+//        $r .= "
+//<textarea id=topadvert_open_div_$b disabled=true style='display: none'>
+//title: Купить <b>$a1->Title</b>:
+//feed_id: 2942
+//pattern_id: 317
+//format: 2
+//book_author: ".AvtorName($a)."
+//book_name: $a1->Title
+//</textarea>
+//&nbsp;
+//<a href='http://lit.rus.ec/pages/biblio_search/?q=$a1->Title'
+//onmouseover=\"topadvert_open_div('topadvert_open_div_$b', event);\" onmouseout=\"topadvert_close_div('topadvert_open_div_$b')\">(купить)</a>
+//";
       }
       $r .= $ast;
     }
