@@ -184,8 +184,8 @@ function libPolkaFriendsBooks() {
   while ($a1 = dbf($sth)) {
     $f = $a1->u;
     $totrated = Sel("SUM(1) FROM librate AS l1 JOIN librate AS l2 
-                WHERE l2.BookId = l1.BookId AND l1.UserId = $u AND l2.UserId = $f"); // всего оценено товарищем $f из оценненых $u
-    if ($totrated && $a1->s/$totrated > 0.6) $FRIENDS[$f] = $a1->s/$totrated;//определяем степень похожести, меньше 60% - это уже не единомышленник ниразу;
+                WHERE l2.BookId = l1.BookId AND l1.UserId = $u AND l2.UserId = $f"); // всего оценено товарищем $f из оцененных $u
+    if ($totrated && $a1->s/$totrated > 0.6) $FRIENDS[$f] = $a1->s/$totrated;//определяем степень похожести, меньше 60% - это уже не единомышленник ни разу;
   }
   if (!$FRIENDS) return "Друзья не обнаружены. Оцените больше книг.";
   arsort($FRIENDS); // сортируем по похожести.

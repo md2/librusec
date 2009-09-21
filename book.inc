@@ -213,7 +213,7 @@ document.write(\'<script type="text/javascript" charset="windows-1251" src="ht\'
   $forum = Sel ("nid FROM node_revisions WHERE title like 'B$b %'");
   if (!$forum) $forum = $oforum;
   if ($forum) $comments = Sel ("COUNT(*) FROM comments WHERE nid = $forum") + 1; 
-  if ($forum) $r .= "<a href=/node/$forum>(обсужается на форуме - $comments сообщений)</a>"; 
+  if ($forum) $r .= "<a href=/node/$forum>(обсуждается на форуме - $comments сообщений)</a>";
   else $r .= " <a href=/b/$b/forum>(обсудить на форуме)</a>"; 
   $r .= $complain."<br><BR><br>";
 // советы  
@@ -417,7 +417,7 @@ function libBookJoin($b1) {
   $b2 = arg(3);
   if (!$b2) {
     return "Вы считаете, что ". bl($b1)." является не более, чем ошибочным синонимом для другой имеющейся в библиотеке книги.\n".
-           "Давайте исправим ситуацию.<br><br>Поищем кандитатов на должность правильной книги.</br>\n".SelectBook("b/$b1/join", "AND BookId <> $b1", Sel("Title FROM libbook WHERE BookId = $b1"));
+           "Давайте исправим ситуацию.<br><br>Поищем кандидатов на должность правильной книги.</br>\n".SelectBook("b/$b1/join", "AND BookId <> $b1", Sel("Title FROM libbook WHERE BookId = $b1"));
   } 
   if ($b1 == $b2) return;
   $r = "<h3>Объединение книг $b1 и $b2</h3>\n";
@@ -668,7 +668,7 @@ function libBookMail($b) {
 
 function libBookRAW($b) {
   $a1 = S("* FROM libbook WHERE BookId = $b");
-  if ($a1->FileType != 'fb2') return 'Увы, не потдерживается исправление не-fb2 книг. Сконвертируйте в fb2 и перезалейте';
+  if ($a1->FileType != 'fb2') return 'Увы, не поддерживается исправление не-fb2 книг. Сконвертируйте в fb2 и перезалейте';
   $raw = file_get_contents(getfb2filepath($b));
   if (!$raw) return "Файл ".getfb2filepath($b)." не прочитался.";
   if (stripos (substr($raw, 0, 128), 'encoding="windows-1251"')) 

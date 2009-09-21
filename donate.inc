@@ -139,7 +139,7 @@ function SavePaid() {
 <table border=0>
 <tr><td>1.<input type=radio name=tp value=1 onChange=FF() $checked>Указанному автору (впишите ID или фамилию и нажмите TAB) 
           <input id=av onBlur=FF(1) size=8 value='$a'> &nbsp; <span id=aname></span>
-<tr><td>2.<input type=radio name=tp value=2 onChange=FF()>Поделить между прочитанными авторами (согласно статистике на <a href=/polka>полке</a> на момент дележа) (только для зарегистрованных пользователей)</tr>
+<tr><td>2.<input type=radio name=tp value=2 onChange=FF()>Поделить между прочитанными авторами (согласно статистике на <a href=/polka>полке</a> на момент дележа) (только для зарегистрированных пользователей)</tr>
 <tr><td>3.<input type=radio name=tp value=3 onChange=FF()>Поделить между всеми авторами (согласно <a href=/donate/stat/avtors>общей статистике библиотеки</a>)</tr>
 <tr><td>4.<input type=radio name=tp value=4 onChange=FF()>Передать на нужды Либрусека</tr>
 $paid
@@ -330,7 +330,7 @@ function libdonateparts() {
   Global $user;
   set_title("Доли авторов");
   $tosplit = Sel ("SUM(Sum) FROM libdonations WHERE Type = 3");
-  $r .= "Доли авторов распределяются пропорционально выкачанным килобайтам. Размер djvu и pdf делится на 7, остального берётся как есть, fb2 непакованный.<br>По умолчанию участвует сто самых популярных, иностранные, не желающие и покинувшие нас вычёркиваются вручную. Просьба сообшать о таковых<br>Если будет смысл, то количество участвующих авторов будет увеличено.<br>На данный момент к разделу \$".($tosplit/100);
+  $r .= "Доли авторов распределяются пропорционально выкачанным килобайтам. Размер djvu и pdf делится на 7, остального берётся как есть, fb2 непакованный.<br>По умолчанию участвует сто самых популярных, иностранные, не желающие и покинувшие нас вычёркиваются вручную. Просьба сообщать о таковых<br>Если будет смысл, то количество участвующих авторов будет увеличено.<br>На данный момент к разделу \$".($tosplit/100);
 
   $limit = $user->name == larin ? 200 : 100;
   $sth = SELECT ("SUM(IF(FileType = 'djvu' OR FileType = 'pdf',FileSize/7,FileSize)*N) AS S, AvtorId FROM liblog JOIN libbook USING(BookId) JOIN libavtor USING (BookId) JOIN libavtorname USING (AvtorId) WHERE NOT NoDonate GROUP BY AvtorId ORDER BY S DESC LIMIT $limit");

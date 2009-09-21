@@ -78,7 +78,7 @@ function libAvtor() {
   if (libcanedit()) $r .= " <a href=/a/$a/edit>(исправить библиографию)</a> <a href=/a/$a/addbook/>(добавить книгу)</a>";
   $forum = Sel ("nid FROM node_revisions WHERE title like 'A$a %'");
   if ($forum) $comments = Sel ("COUNT(*) FROM comments WHERE nid = $forum") + 1; 
-  if ($forum) $r .=  "<a href=/node/$forum>(обсужается на форуме - $comments сообщений)</a>"; 
+  if ($forum) $r .=  "<a href=/node/$forum>(обсуждается на форуме - $comments сообщений)</a>";
   else $r .=  " <a href=/a/$av/forum>(обсудить на форуме)</a>"; 
   if ($user->uid) $r .= " <a href=/a/$av/stat>(статистика)</a>";
   if (!$a1->NoDonate && ($a1->uid || $a1->WebPay)) $r .=  " <a href=/donate/author/$a>(заплатить автору)</a>";
@@ -217,7 +217,7 @@ function libAvtorEdit($a, $a1) {
   if (Sel("libbook.BookId FROM libavtor JOIN libbook USING(BookID) WHERE AvtorId = $a AND (Deleted&1) LIMIT 1"))
     $r .= " <a href=/a/$a/deleted>(показать удалённые книги)</a> ";
   if (Sel("Sum(1), SUBSTRING_INDEX(Title, '(',1) as T FROM libavtor JOIN libbook USING(BookID) WHERE AvtorId = $a  AND NOT (Deleted&1) GROUP BY T ORDER BY 1 DESC LIMIT 1")>1) 
-  $r .= "<a href=/a/$a/searchd>Показать преположительные дубли</a> ";
+  $r .= "<a href=/a/$a/searchd>Показать предположительные дубли</a> ";
  
   $sth = SELECT("* FROM `libavtoraliase` WHERE GoodId = $a");
   while ($a1 = dbf($sth)) {
@@ -294,7 +294,7 @@ function libUpload() {
 <li>При добавлении нескольких fb2 можно запаковать их в один архив для упрощения работы.
 <li>При добавлении крупных файлов непакованных форматов (doc, txt, html, etc...) упакуй их зипом. 
 <li>При добавлении полученного зипа укажи исходный тип файла (doc, txt, html, etc...). 
-<li>При добалении пакованных форматов (djvu, pdf, jpg) упаковывать не обязательно.
+<li>При добавлении пакованных форматов (djvu, pdf, jpg) упаковывать не обязательно.
 </ol>
 <ol>Способы
 <li><a href=/upload/online/fb2>Добавление книг в формате fb2 (до 2х мегабайт)</a>
@@ -441,7 +441,7 @@ function libAvtorCorrect($a, $a1) {
 
 function libAvtorAlias($a) {
  if (!$a2 = arg(3)) 
-   return "Вы считаете, что ". avl($a)." является не более, чем ошибочным синонимом для другого имеющегося в библиотеке автора. Давайте исправим ситуацию.<br><br>Поищем кандитатов на должность правильного автора.</br>".SelectAvtor("/a/$a/alias/", "AND AvtorId <> $a");
+   return "Вы считаете, что ". avl($a)." является не более, чем ошибочным синонимом для другого имеющегося в библиотеке автора. Давайте исправим ситуацию.<br><br>Поищем кандидатов на должность правильного автора.</br>".SelectAvtor("/a/$a/alias/", "AND AvtorId <> $a");
   $al1 = avl($a,'-',cnt);
   $al2 = avl($a2,'-',cnt);
   return "Вы считаете, что $al1 является не более, чем ошибочным синонимом для $al2<br><a href=/a/$a/doalias/$a2>Произвести замену автора</a> $al1 на $al2<br><br><br><br><br>Вы считаете, что $al2 является не более, чем ошибочным синонимом для $al1<br><a href=/a/$a2/doalias/$a>Произвести замену автора</a> $al2 на $al1<br>";
@@ -476,7 +476,7 @@ function libAvtorDoAlias($a1) {
 function DoAvtorAlias ($bi, $gi) {
   Global $user;
   if (Sel ("* FROM libavtoraliase WHERE BadId = $gi")) 
-    return "<p>Товарищь ".avl($gi)." сам алиас. Так не пойдёт";
+    return "<p>Товарищ ".avl($gi)." сам алиас. Так не пойдёт";
   $st = SELECT ("BookId FROM libavtor WHERE AvtorId = $bi");
   while ($a1 = dbf($st)) {
     $bn++;
