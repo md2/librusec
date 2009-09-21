@@ -1,7 +1,10 @@
-bwlist/* usr/share/drupal6/modules/bwlist
 *.css *.inc *.info *.install *.js *.module *.php usr/share/drupal6/modules/librusec
+agrey/*.js usr/share/drupal6/agrey
+bwlist/* usr/share/drupal6/modules/bwlist
+conv/* usr/share/drupal6/conv
 debian/apache.conf usr/share/librusec
 debian/htaccess usr/share/librusec
+debian/move_books.sh usr/share/librusec
 fb21schema/*.xsd usr/share/drupal6/schema
 img/* usr/share/drupal6/img
 schema.sql usr/share/librusec
