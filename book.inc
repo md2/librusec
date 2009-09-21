@@ -77,26 +77,26 @@ document.write(\'<script type="text/javascript" charset="windows-1251" src="ht\'
   switch(arg(2)) {
     case 'read':
       libSaveLog($b, $u);
-      if ($book->Blocked) { //добавляем рекламу
-        $adv1 = "<script language=JavaScript> var loc = ''; </script>
-<script language=\"JavaScript1.4\">try{ var loc = escape(top.location.href); }catch(e){;}</script>
-<script language=JavaScript>
-var userid = 161784436; var page = 1;
-var rndnum = Math.round(Math.random() * 999111);
-document.write('<iframe src=\"http://ad1.edu-all.ru/bb.cgi?cmd=ad&hreftarget=_blank&pubid=' + userid + '&pg=' + page + '&vbn=1756&w=600&h=90&num=1&r=ssi&ssi=nofillers&r=ssi&nocache=' + rndnum + '&ref=' + escape(document.referrer) + '&loc=' + loc + '\" frameborder=0 vspace=0 hspace=0 width=600 height=90 marginwidth=0 marginheight=0 scrolling=no>');
-document.write('<a href=\"http://ad1.edu-all.ru/bb.cgi?cmd=go&pubid=' + userid + '&pg=' + page + '&vbn=1756&num=1&w=600&h=90&nocache=' + rndnum + '&loc=' + loc + '&ref=' + escape(document.referrer) + '\" target=_blank>');
-document.write('<img src=\"http://ad1.edu-all.ru/bb.cgi?cmd=ad&pubid=' + userid + '&pg=' + page + '&vbn=1756&num=1&w=600&h=90&nocache=' + rndnum + '&ref=' + escape(document.referrer) + '&loc=' + loc + '\" width=600 height=90 Alt='EDU 600x90' border=0></a></iframe>');
-</script>";
-        $adv2 = "<script language=JavaScript> var loc = ''; </script>
-<script language=\"JavaScript1.4\">try{ var loc = escape(top.location.href); }catch(e){;}</script>
-<script language=JavaScript>
-var userid = 161784436; var page = 1;
-var rndnum = Math.round(Math.random() * 999111);
-document.write('<iframe src=\"http://ad1.edu-all.ru/bb.cgi?cmd=ad&hreftarget=_blank&pubid=' + userid + '&pg=' + page + '&vbn=1756&w=600&h=90&num=2&r=ssi&ssi=nofillers&r=ssi&nocache=' + rndnum + '&ref=' + escape(document.referrer) + '&loc=' + loc + '\" frameborder=0 vspace=0 hspace=0 width=600 height=90 marginwidth=0 marginheight=0 scrolling=no>');
-document.write('<a href=\"http://ad1.edu-all.ru/bb.cgi?cmd=go&pubid=' + userid + '&pg=' + page + '&vbn=1756&num=2&w=600&h=90&nocache=' + rndnum + '&loc=' + loc + '&ref=' + escape(document.referrer) + '\" target=_blank>');
-document.write('<img src=\"http://ad1.edu-all.ru/bb.cgi?cmd=ad&pubid=' + userid + '&pg=' + page + '&vbn=1756&num=2&w=600&h=90&nocache=' + rndnum + '&ref=' + escape(document.referrer) + '&loc=' + loc + '\" width=600 height=90 Alt=\"EDU 600x90\" border=0></a></iframe>');
-</script>";
-      }
+//      if ($book->Blocked) { //добавляем рекламу
+//        $adv1 = "<script language=JavaScript> var loc = ''; </script>
+//<script language=\"JavaScript1.4\">try{ var loc = escape(top.location.href); }catch(e){;}</script>
+//<script language=JavaScript>
+//var userid = 161784436; var page = 1;
+//var rndnum = Math.round(Math.random() * 999111);
+//document.write('<iframe src=\"http://ad1.edu-all.ru/bb.cgi?cmd=ad&hreftarget=_blank&pubid=' + userid + '&pg=' + page + '&vbn=1756&w=600&h=90&num=1&r=ssi&ssi=nofillers&r=ssi&nocache=' + rndnum + '&ref=' + escape(document.referrer) + '&loc=' + loc + '\" frameborder=0 vspace=0 hspace=0 width=600 height=90 marginwidth=0 marginheight=0 scrolling=no>');
+//document.write('<a href=\"http://ad1.edu-all.ru/bb.cgi?cmd=go&pubid=' + userid + '&pg=' + page + '&vbn=1756&num=1&w=600&h=90&nocache=' + rndnum + '&loc=' + loc + '&ref=' + escape(document.referrer) + '\" target=_blank>');
+//document.write('<img src=\"http://ad1.edu-all.ru/bb.cgi?cmd=ad&pubid=' + userid + '&pg=' + page + '&vbn=1756&num=1&w=600&h=90&nocache=' + rndnum + '&ref=' + escape(document.referrer) + '&loc=' + loc + '\" width=600 height=90 Alt='EDU 600x90' border=0></a></iframe>');
+//</script>";
+//        $adv2 = "<script language=JavaScript> var loc = ''; </script>
+//<script language=\"JavaScript1.4\">try{ var loc = escape(top.location.href); }catch(e){;}</script>
+//<script language=JavaScript>
+//var userid = 161784436; var page = 1;
+//var rndnum = Math.round(Math.random() * 999111);
+//document.write('<iframe src=\"http://ad1.edu-all.ru/bb.cgi?cmd=ad&hreftarget=_blank&pubid=' + userid + '&pg=' + page + '&vbn=1756&w=600&h=90&num=2&r=ssi&ssi=nofillers&r=ssi&nocache=' + rndnum + '&ref=' + escape(document.referrer) + '&loc=' + loc + '\" frameborder=0 vspace=0 hspace=0 width=600 height=90 marginwidth=0 marginheight=0 scrolling=no>');
+//document.write('<a href=\"http://ad1.edu-all.ru/bb.cgi?cmd=go&pubid=' + userid + '&pg=' + page + '&vbn=1756&num=2&w=600&h=90&nocache=' + rndnum + '&loc=' + loc + '&ref=' + escape(document.referrer) + '\" target=_blank>');
+//document.write('<img src=\"http://ad1.edu-all.ru/bb.cgi?cmd=ad&pubid=' + userid + '&pg=' + page + '&vbn=1756&num=2&w=600&h=90&nocache=' + rndnum + '&ref=' + escape(document.referrer) + '&loc=' + loc + '\" width=600 height=90 Alt=\"EDU 600x90\" border=0></a></iframe>');
+//</script>";
+//      }
       return DoLibRow($book,'authors noread')." $mailit $complain<br>$topadvert<br>".$adv1.libRead($b).$adv2."<br><br>".DoLibRow($book,'rateonly').$topadvert1;
     case 'download': 
       return libDownloadBook($book, GetUserOpt('D'));
@@ -131,8 +131,8 @@ document.write('<img src=\"http://ad1.edu-all.ru/bb.cgi?cmd=ad&pubid=' + userid 
   $r .= Undellink($b);
   $ttt[$jj++] = microtime(1);
   if (user_access('библиотекарь')) {
-    if ($book->block) $block = " &nbsp; <a href=/b/$b/block/0>(разблокировать)</a>";
-    else $block = " &nbsp; <a href=/b/$b/block/1>(заблокировать)</a>";
+    //if ($book->block) $block = " &nbsp; <a href=/b/$b/block/0>(разблокировать)</a>";
+    //else $block = " &nbsp; <a href=/b/$b/block/1>(заблокировать)</a>";
     $sth = SELECT("BadId FROM libjoinedbooks WHERE GoodId = $b");
     while ($a1=dbf($sth)) $r .= "(замена для ".bl($a1->BadId).")<br>";
   }
@@ -153,7 +153,7 @@ document.write('<img src=\"http://ad1.edu-all.ru/bb.cgi?cmd=ad&pubid=' + userid 
     if ($n != $book->N && $n > 0) Update (libbook, "N=$n", "BookId=$b");
   }  
   $ttt[$jj++] = microtime(1);
-  if ($book->Blocked) $r .= '('.libUnblockMes($book).')';
+  //if ($book->Blocked) $r .= '('.libUnblockMes($book).')';
   $r .= DoLibRow($book, 'sequencen nolink genre nobreak seltype notrans');
   if ($book->Broken) $r .= '(битый fb2)';
   $ttt[$jj++] = microtime(1);
@@ -277,8 +277,8 @@ function printallann($b) {
 function libDownloadBook($a1, $dtp = 'fb2') {
   Global $user;
   if (!$dtp) $dtp = 'fb2';
-  if ($a1->Blocked && !user_access('библиотекарь')) 
-    return libUnblockMes($a1);
+  //if ($a1->Blocked && !user_access('библиотекарь'))
+  //  return libUnblockMes($a1);
   $b = $a1->BookId;
   libSaveLog($b, $u);
   if ($a1->FileType == 'fb2') {
@@ -422,7 +422,7 @@ function libBookJoin($b1) {
   if (($a1->Deleted&1) && ! ($a2->Deleted&1)) {
     if ($b = Sel("GoodId FROM libjoinedbooks WHERE BadId = $b1")) return "Книга $b1 объединена с книгой $b";
     LogAction("INSERT INTO libjoinedbooks (GoodId, BadId) VALUES ($b2, $b1)", "Join books $b2 $b1", "DELETE FROM libjoinedbooks WHERE GoodId = $b2 AND BadId $b1", $b1);
-    libCheckBlock($b1, $b2);
+    //libCheckBlock($b1, $b2);
     libwst($b1, 1);
     libwst($b2, 1);
     return "Объединение свершилось. Проследуйте на ".bl($b2);
@@ -465,7 +465,7 @@ function libBookDoJoin($b1, $b2) {
   if ($b = Sel("GoodId FROM libjoinedbooks WHERE BadId = $b2")) return "Книга $b2 уже объединена с книгой $b";
   if ($b = Sel("GoodId FROM libjoinedbooks WHERE BadId = $b1")) return "Книга $b1 объединена с книгой $b";
   LogAction("INSERT INTO libjoinedbooks (GoodId, BadId) VALUES ($b1, $b2)", "Join books $b1 $b2", "DELETE FROM libjoinedbooks WHERE GoodId = $b1 AND BadId = $b2", $b2);
-  libCheckBlock($b1, $b2);
+  //libCheckBlock($b1, $b2);
   libwst($b1, 1);
   libwst($b2, 1);
   

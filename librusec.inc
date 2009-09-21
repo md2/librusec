@@ -466,15 +466,15 @@ function DoLibRow($b, $style='') {
   }  
   if (!$a1 || !$ShowEN && $a1->Lang != 'ru') return ''; 
   $edit = strstr($style,'edit') && !variable_get('librusec_Mirror', '0');
-  if ($a1->Blocked) {
-    if (libBookDays($a1) > 31) {
-      $a1->Blocked = '';
-      Update(libbook, "Blocked = ''", "BookId = $b");
-    } elseif (user_access('библиотекарь')) {
-      $a1->Blocked = '';
-    } 
-    if ($a1->Blocked && !$user->uid) return '';
-  }  
+  //if ($a1->Blocked) {
+  //  if (libBookDays($a1) > 31) {
+  //    $a1->Blocked = '';
+  //    Update(libbook, "Blocked = ''", "BookId = $b");
+  //  } elseif (user_access('библиотекарь')) {
+  //    $a1->Blocked = '';
+  //  }
+  //  if ($a1->Blocked && !$user->uid) return '';
+  //}
   if ($style != 'rateonly' && !libListBlackGG() && (!$user->uid || !strstr($style,'seltype')) && !user_access('библиотекарь')) {
     $cid = 'LibRow'.md5($b.$style.$sa.$ShowEN).$a1->Blocked;
     if ($r = libcg($cid)) 
@@ -599,14 +599,14 @@ function DoLibRow($b, $style='') {
     if ($tp == 'fb2') {
       if (!strstr($style,'noread')) 
         $r .= " &nbsp; <a href=/b/$b/read>(читать)</a> &nbsp; ";
-      if (!$a1->Blocked) {
+      //if (!$a1->Blocked) {
         if ($user->uid) {
           $r .= " <a href=/b/$b/download>(скачать)</a> ";
           if (strstr($style,'seltype')) $r .= ' '.libSelectFileType($b);     
         } else {
           $r .= " <a href=/b/$b/fb2>(скачать fb2)</a> <a href=/b/$b/java>(на телефон)</a> ";
         }  
-      }  
+      //}
     } else {
       $r .= " <a href=/b/$b/download>(скачать $tp)</a> ";
     }  

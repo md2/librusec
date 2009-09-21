@@ -69,7 +69,7 @@ function libAvtor() {
     $uname = Sel ("name FROM users WHERE uid = $uid");
     $r .= "Известен в библиотеке как <a href=/user/$uid>$uname</a><br>";
   }  
-  if ($a1->Blocked && user_access('библиотекарь')) $r .= "(Заблокирован от добавления книг небиблиотекарями)<br>";
+  //if ($a1->Blocked && user_access('библиотекарь')) $r .= "(Заблокирован от добавления книг небиблиотекарями)<br>";
   if (!$_GET['page'] && !$lang) {
     $ann = ReadAvtorPage($a, $nid);
     if (!$nid) $r .= "<a href=/node/add/adesc/$a>(добавить описание автора)</a>\n";
@@ -130,7 +130,7 @@ else $sa = 'on';
   }
   $fields = "libbook.BookId AS BookId, Lang, N, FileType, FileSize, Deleted, Title, Title1, libbook.Blocked AS Blocked, libbook.Time AS Time";
   if ($joinseq) $seqid = ', SeqId, IF(Level<100, SeqName, NULL) AS SeqName, IF(Level<100, SeqNumb, NULL) as SeqNumb';
-  if (!$user->uid) $lsql .= " AND NOT libbook.Blocked";
+  //if (!$user->uid) $lsql .= " AND NOT libbook.Blocked";
   if ($g) {
     $sth = SELECT ("GenreId, $fields $seqid
 FROM libavtor JOIN libgenre USING (BookId) JOIN libbook USING (BookId) $joinseq $joinreaded
@@ -337,8 +337,8 @@ function libUpload() {
 function libAvtorAddBook($a) {
   Global $user;
   if (!libcanedit()) return NetPrav;
-  if ($a && !user_access('библиотекарь') && Sel('Blocked FROM libavtorname WHERE AvtorId = %d', $a)) 
-    return 'Книги автора '.avl($a).' могут добавлять только библиотекари. Извините.';
+  //if ($a && !user_access('библиотекарь') && Sel('Blocked FROM libavtorname WHERE AvtorId = %d', $a))
+  //  return 'Книги автора '.avl($a).' могут добавлять только библиотекари. Извините.';
   $r = "Добавление книги:";
   if ($_FILES['book']['tmp_name']) {
     $fname = trim($_FILES['book']['name']);
@@ -655,8 +655,8 @@ function AddFileToLibrusec($f, $ext, $a, $blocka = '') {
       return $r.libAddDubl($f, $BookId, $blocka, $a)." Версия не лучше: $oldver:$ver<br>";
   } 
   foreach($PD->AvtorIds as $aid) {
-    if ($blocka == '' && !user_access('библиотекарь') && Sel('Blocked FROM libavtorname WHERE AvtorId = %d', $aid))
-      return 'Книги автора '.avl($a).' могут добавлять только библиотекари. Извините.';
+    //if ($blocka == '' && !user_access('библиотекарь') && Sel('Blocked FROM libavtorname WHERE AvtorId = %d', $aid))
+    //  return 'Книги автора '.avl($a).' могут добавлять только библиотекари. Извините.';
     if ($BookId = Sel ("libbook.BookId FROM libbook JOIN libavtor USING (BookId) WHERE Title=\"$t\" AND AvtorId = '$aid' AND NOT (1&Deleted)")) break;   
     $ln = Sel ("LastName FROM libavtorname WHERE AvtorId = %d", $aid);
     $r .= "Проверяем $ln<br>";
@@ -719,8 +719,8 @@ WHERE Title LIKE \"$t%\" AND FileType = '$filetype' AND LastName = \"$ln\" AND N
   }  
   $r .= "<p><a href=/b/$b/edit target=_blank>Книга добавлена</a><br>";
 
-  if ($blocka <> '')  // книга добавлена роботом Литрес
-      libBlockBook($b, $blocka, $PD->AvtorIds[0]);
+  //if ($blocka <> '')  // книга добавлена роботом Литрес
+  //    libBlockBook($b, $blocka, $PD->AvtorIds[0]);
   foreach ($GenreIds as $gid) Insert ('libgenre', 'BookId, GenreId', "$b, $gid"); 
   if ($PD->AvtorIds) foreach ($PD->AvtorIds as $aid) Insert ('libavtor', 'BookId, AvtorId', "$b, $aid"); 
   if ($PD->TranslatorIds) foreach ($PD->TranslatorIds as $aid) Insert ('libtranslator', 'BookId, TranslatorId', "$b, $aid"); 
@@ -740,8 +740,8 @@ WHERE Title LIKE \"$t%\" AND FileType = '$filetype' AND LastName = \"$ln\" AND N
 
 function libAddDubl($f, $b, $blocka) {
   unlink ($f);
-  if ($blocka <> '') // книга добавлена роботом Литрес
-  libBlockBook($b, $blocka, $a);
+  //if ($blocka <> '') // книга добавлена роботом Литрес
+  //libBlockBook($b, $blocka, $a);
   return bl($b);
 }
 

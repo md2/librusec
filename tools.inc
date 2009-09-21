@@ -36,7 +36,7 @@ function libNew() {
   }
   drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="Новые книги на Либрусеке RSS" href="/new/rss'.$rssmod.'" />');
   Global $sa, $rd, $user;
-  if (!$user->uid) $asql = "AND Lang = 'ru' AND NOT Blocked";
+  if (!$user->uid) $asql = "AND Lang = 'ru'";
   $r = "<form action='/new'><a href='/new/rss$rssmod' class='feed-icon'><img src='/misc/feed.png' alt=RSS title='RSS' width='16' height='16'></a> &nbsp; <b><a href='http://syndicated.livejournal.com/librusec/' style='color:black'>ЖЖ</a></b> &nbsp; ";
   $sth = SELECT("DISTINCT Lang FROM libbook WHERE Lang <> '' AND NOT (Deleted&1) ".($t ? " AND FileType = '$t'" : ""));
   while ($v = db_result($sth)) $sellang .= "<option value='$v'".($v==$l?" selected":"").">$v";

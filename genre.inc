@@ -3,7 +3,7 @@ include_once drupal_get_path('module', 'librusec') .'/librusec.inc';
 
 function libGenre() {
   Global $user, $ShowEN;  
-  if (!$ShowEN) $asql = "AND Lang='ru' AND libbook.Blocked = '' ";
+  if (!$ShowEN) $asql = "AND Lang='ru'";
   $g = arg(1);
   if (!$g || $g == 'all' || $g == 'ge') { 
     set_title("Список жанров");
