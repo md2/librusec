@@ -6,7 +6,7 @@ include /usr/share/cdbs/1/rules/buildcore.mk
 # Add here any variable or target overrides you need.
 
 binary-fixup/librusec::
-	for dir in b b.fb2 b.htm b.html b.tmp b.txt b.usr cache cache/g cache/new i ocr; do \
+	for dir in b b.fb2 b.htm b.html b.tmp b.txt b.usr cache cache/a cache/g cache/new i ocr; do \
 		chown www-data:www-data $(CURDIR)/debian/librusec/usr/share/drupal6/$$dir; \
 	done
 
