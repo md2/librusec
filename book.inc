@@ -397,7 +397,7 @@ function libBookDelete($b) {
 
 function libBookUnDel($b) {
   $type = Sel ("FileType FROM libbook WHERE bookid = $b");
-  $fn = $type == 'fb2' ? getfb2filepath($b) : Sel ("FileName FROM libbook WHERE bookid = $b");
+  $fn = $type == 'fb2' ? getfb2filepath($b) : "b.usr/" . Sel ("FileName FROM libfilename WHERE bookid = $b");
   $a = Sel ("AvtorId FROM libavtor WHERE BookId = $b");
   if (!file_exists($fn))
 	  return "<b style='color:red;'>Книга $b физически отсутствует и не может быть восстановлена.</b><br>\n<br><a href=/a/$a/edit>Продолжить обработку</a> автора ".avl($a);
