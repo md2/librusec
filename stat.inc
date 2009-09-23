@@ -144,8 +144,37 @@ function libStat($f='', $f2 = '') {
 
     case 'u':
       $sth = SELECT("SUM(1) AS N, substr(Time, 1,7) AS Mes FROM `libbook` GROUP BY 2");
-      while ($a1=dbf($sth)) $r .= "<tr><td>$a1->Mes<td>$a1->N";
+      $data = "";
+      while ($a1=dbf($sth)) {
+        $r .= "<tr><td>$a1->Mes<td>$a1->N";
+        $data .= "$a1->Mes $a1->N\n";
+      }
+      if (!file_exists("i/plot.png") || time()-filectime("i/plot.png") > 3600) {
+        $data .= "e";
+        $cmd = "set term png size 800,600
+set output 'i/plot.png'
+set key off
+set style data lines
+set grid
+set xdata time
+set timefmt '%Y-%m'
+set format x '%Y-%m'
+set xrange ['2007-07':]
+f(x) = a*x + b
+FIT_LIMIT = 1e-12
+set fit logfile '/tmp/fit.log'
+fit f(x) '-' using 1:2 via a,b
+$data
+set rmargin 5
+plot '-' using 1:2 lt rgb 'red', f(x) lt rgb 'red' lw 2
+$data
+";
+        $pipe = popen("gnuplot -", 'w');
+        fwrite($pipe, $cmd);
+        pclose($pipe);
+      }
       $r = "<table>$r</table>";
+      $r .= "<br/><img src=\"/i/plot.png\"/>";
     break;
     case 'tot': 
       $r =  "<h4>Всего</h4>".Sel ("Count(*) FROM libbook WHERE NOT (Deleted&1)");
