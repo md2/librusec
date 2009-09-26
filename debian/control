@@ -8,6 +8,7 @@ Homepage: http://github.com/md2/librusec
 
 Package: librusec
 Architecture: all
-Depends: apache2, drupal6, libxml-libxslt-perl, mysql-client-5.0, mysql-server-5.0, php5, ${misc:Depends}
+Depends: apache2, drupal6, mysql-client-5.0, mysql-server-5.0, php5, ${misc:Depends}
+Recommends: gnuplot, libxml-libxslt-perl
 Description: librusec module of the library
  -
