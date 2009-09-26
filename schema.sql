@@ -255,6 +255,21 @@ CREATE TABLE `libcache1` (
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `libcacheid`
+--
+
+DROP TABLE IF EXISTS `libcacheid`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `libcacheid` (
+  `BookId` int(11) NOT NULL,
+  `Id` varchar(99) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`BookId`),
+  KEY `Id` (`Id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `libdonations`
 --
 
