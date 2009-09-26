@@ -5,6 +5,24 @@ Global $path, $PP;
 
 function libCheck() {
   switch (arg(1)) { 
+   case 'integrity':
+     $count = 0;
+     $sth = SELECT ("BookId FROM libbook WHERE FileType = 'fb2' AND NOT (Deleted&1)");
+     while ($a1 = dbf($sth)) {
+       if (!file_exists(getfb2filepath($a1->BookId))) {
+         $sth2 = SELECT ("BadId FROM libjoinedbooks WHERE GoodId = $a1->BookId");
+	 while ($a2 = dbf($sth2)) {
+	   if (file_exists(getfb2filepath($a2->BadId))) {
+             db_query("UPDATE libbook SET deleted='' WHERE BookId = $a2->BadId");
+             db_query("DELETE FROM libjoinedbooks WHERE BadId = $a2->BadId");
+	   }
+	 }
+	 db_query("UPDATE libbook SET Deleted=(1|Deleted) WHERE BookId = $a1->BookId");
+	 $count++;
+       }
+     }
+     return "Удалено: $count отсутствующих книг.<br/>\n";
+     break;
    case fixalias:
      $sth = SELECT ("* FROM libavtoraliase JOIN libavtor ON(AvtorId=BadId)");
      while ($a1 = dbf($sth)) {
