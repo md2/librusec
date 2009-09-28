@@ -23,6 +23,26 @@ function libCheck() {
      }
      return "Удалено: $count отсутствующих книг.<br/>\n";
      break;
+   case 'populatelibcacheid':
+     $sth = SELECT ("BookId FROM libbook WHERE FileType = 'fb2' AND BookId NOT IN (SELECT BookId FROM libcacheid)");
+     while ($a1 = dbf($sth)) {
+       $fn = getfb2filepath($a1->BookId);
+       if (!file_exists($fn)) continue;
+       if ($e = parsefb2($fn, 0, 'head'))
+         $r .= "$fn:$e<br/>\n";
+       else {
+         Global $PD;
+         $id = $PD->head['FICTIONBOOK/DESCRIPTION/DOCUMENT-INFO/ID'];
+         if ($id)
+           db_query("INSERT INTO libcacheid(BookId, Id) VALUES($a1->BookId, '$id')");
+         else
+           $count2++;
+         $count++;
+       }
+     }
+     $r = "Обработано всего: $count книг, не удалось получить ID: $count2 книг.<br/>\n".$r;
+     return $r;
+     break;
    case fixalias:
      $sth = SELECT ("* FROM libavtoraliase JOIN libavtor ON(AvtorId=BadId)");
      while ($a1 = dbf($sth)) {
