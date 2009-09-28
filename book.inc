@@ -22,6 +22,10 @@ function libBook() {
   if ($bo > 0 && strlen($bo) < 16 && $bo <= Sel("MAX(BookId) FROM libbook")) {
     $b = Sel ("BookId FROM libbook WHERE BookId = %d", $bo);
   } 
+  if ($b && Sel("FileType FROM libbook WHERE BookId = %d", $b) == 'fb2' && !file_exists(getfb2filepath($b))) {
+    header('Location: /b/');
+    exit;
+  }
   if (!$b) {
     $sth = SELECT("BookId FROM libbook LEFT JOIN libcacheid USING(BookId) WHERE (Id = '%s' OR md5 = '%s') AND NOT (Deleted&1)", $bo, $bo);
     for ($n = 0; $bb = db_result($sth); $n++) 
