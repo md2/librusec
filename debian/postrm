@@ -8,6 +8,7 @@ set -e
 case "$1" in
     remove)
 	rm -f /etc/apache2/conf.d/librusec.conf
+	rm -f /usr/share/drupal6/AJAX.php
 	invoke-rc.d apache2 reload
     ;;
     purge)
@@ -18,7 +19,16 @@ case "$1" in
 	if [ -f /etc/drupal/6/htaccess ]; then
 		ln -s /etc/drupal/6/htaccess /usr/share/drupal6/.htaccess
 	fi
-# FIXME: drop tables
+	for t in booklib libactions libanode libavtor libavtoraliase \
+			libavtorname libblocked libbnode libbook libcache \
+			libcache1 libcacheid libdonations libfilename \
+			libgenre libgenrelist libjoinedbooks liblog libmass \
+			libpolka libpolkarate libquality librate libreaded \
+			librusec libseq libseqname libsrclang libstat \
+			libtopadvert libtranslator libuserblackgenre libuseropt; do
+		echo "DROP TABLE $t;"
+	done |
+	mysql -uroot -p drupal6 || true
 	rm -f /etc/apache2/conf.d/librusec.conf
 	rm -f /usr/share/drupal6/AJAX.php
 	invoke-rc.d apache2 reload

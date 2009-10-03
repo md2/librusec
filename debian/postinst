@@ -17,7 +17,9 @@ case "$1" in
 	chown www-data:www-data /usr/share/drupal6/b/??
 	db_get librusec/mysql_root_password || true
 	pwd=$RET
-	mysql -uroot -p"$pwd" drupal6 < /usr/share/librusec/schema.sql
+	if ! echo SHOW TABLES | mysql -uroot -p"$pwd" drupal6 | grep -qw librusec; then
+		mysql -uroot -p"$pwd" drupal6 < /usr/share/librusec/schema.sql
+	fi
 	db_set librusec/mysql_root_password ""
 	db_fset librusec/mysql_root_password seen false
 	db_go
