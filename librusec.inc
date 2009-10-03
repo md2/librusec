@@ -141,8 +141,9 @@ function Sel($st) {
   return db_result(SELECT($st, $args));
 }
 
-function getfb2filepath($b) {
- $md5 = Sel("md5 FROM libbook WHERE BookId = %d", $b);
+function getfb2filepath($b, $md5 = '') {
+ if (!$md5)
+   $md5 = Sel("md5 FROM libbook WHERE BookId = %d", $b);
  return "b/".substr($md5, 0, 2)."/$b.fb2";
 }
 
