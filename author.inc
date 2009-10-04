@@ -27,7 +27,7 @@ function libAvtor() {
 //    $a = Sel("AvtorId FROM libavtorname WHERE LastName = '%s' OR '%s' = Concat_WS(' ', FirstName, LastName) LIMIT 1", $av, $av);
 //    if (!$a) $av = iconv ("windows-1251", "UTF-8", $av);
     $sth = SELECT("AvtorId FROM libavtorname WHERE LastName = '%s' OR '%s' = Concat_WS(' ', FirstName, LastName)", $av, $av);
-    for ($n = 0; $n < 10 && ($aa = db_result($sth));$k++) 
+    for ($n = 0; ($n < 10 || isset($_GET['all'])) && ($aa = db_result($sth)); $k++)
       if (!Sel("GoodId FROM libavtoraliase WHERE BadId = $aa")) 
          if ($cnt = Sel ("COUNT(*) FROM libavtor JOIN libbook USING(BookId) WHERE AvtorId = $aa AND NOT (Deleted&1)")) {
            $n++; $r .= '<li>'.avl($a=$aa)." ($cnt)";
@@ -35,6 +35,7 @@ function libAvtor() {
     if (!$a) return libList('a', $av);
     if ($n > 1) {
       set_title("Авторы по фамилии $av");
+      if ($aa) $r .= "<li><a href=\"/a/$av?all\">...</a></li>";
       return "<ol>$r</ol>";
     }
   }  
