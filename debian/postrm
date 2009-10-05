@@ -20,7 +20,7 @@ case "$1" in
 		ln -s /etc/drupal/6/htaccess /usr/share/drupal6/.htaccess
 	fi
 	for t in booklib libactions libanode libavtor libavtoraliase \
-			libavtorname libblocked libbnode libbook libcache \
+			libavtorname libblocked libbnode libbook libbookwatch libcache \
 			libcache1 libcacheid libdonations libfilename \
 			libgenre libgenrelist libjoinedbooks liblog libmass \
 			libpolka libpolkarate libquality librate libreaded \

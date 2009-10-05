@@ -224,6 +224,21 @@ CREATE TABLE `libbook` (
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `libbookwatch`
+--
+
+DROP TABLE IF EXISTS `libbookwatch`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `libbookwatch` (
+  `UserId` int(11) NOT NULL,
+  `BookId` int(11) NOT NULL,
+  PRIMARY KEY  (`UserId`,`BookId`),
+  KEY `UserId` (`UserId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `libcache`
 --
 

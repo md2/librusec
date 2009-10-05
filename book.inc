@@ -173,6 +173,7 @@ document.write(\'<script type="text/javascript" charset="windows-1251" src="ht\'
     $seqtxt .= "<a href=/s/$seq->SeqId>$seq->SeqName</a>" ;
   }
   $r .= $seqtxt;  if (libcanedit($b)) $r .= " &nbsp; <a href=/b/$b/edit>(исправить)</a> $block";
+  $r .= "&nbsp;<a href=/polka/watch/add/$b>(следить)</a>";
   $r .= "<br>";
   $img = '';
 //  if ($book->FileType == 'fb2') {

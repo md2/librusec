@@ -10,9 +10,11 @@ function libPolka() {
   if (!$u || !user_access('пользоваться полкой')) 
     return "У вас нет доступа к книжной полке. Извините.";
 
-  $r = "<a href=/polka/rated>Оценки</a> &nbsp; <a href=/polka/readed>Прочитано</a> &nbsp; <a href='/polka'>Впечатления</a> &nbsp; <a href=/polka/friends>Единомышленники</a> &nbsp; <a href=/polka/friends/books>Советы единомышленников</a><br><br>";
+  $r = "<a href=/polka/rated>Оценки</a> &nbsp; <a href=/polka/readed>Прочитано</a> &nbsp; <a href='/polka'>Впечатления</a> &nbsp; <a href=/polka/friends>Единомышленники</a> &nbsp; <a href=/polka/friends/books>Советы единомышленников</a> &nbsp; <a href=/polka/watch>Наблюдаемые книги</a><br><br>";
 
   switch (arg(1)) {
+    case 'watch':
+      return $r.libBookWatch($u);
     case readed:
       return $r.libPolkaReaded($u);
     case rated:
@@ -329,5 +331,46 @@ $link
   header('Content-Type: application/rss+xml; charset=utf-8'); 
   echo libReadCacheFile ($CacheFile);
   exit;
+}
+
+function libBookWatch($u) {
+  switch(arg(2)) {
+    case 'add':
+      $id = addslashes(arg(3));
+      if (!$id) $id = addslashes($_POST['id']);
+      if (!($id = Sel("BookId FROM libbook WHERE BookId = %d", $id)))
+        $r .= "<b style='color:red;'>Нет такой книги.</b><br><br>";
+      else {
+        Insert('libbookwatch', 'UserId, BookId', "$u, $id");
+        $r .= "<span style='color:green;'>Книга $id добавлена в список наблюдения.</span><br><br>";
+      }
+      break;
+    case 'del':
+      $id = addslashes(arg(3));
+      if (!($id = Sel("BookId FROM libbookwatch WHERE BookId = %d", $id)))
+        $r .= "<b style='color:red;'>Нет такой книги в списке наблюдения.</b><br><br>";
+      else {
+        Delete("libbookwatch WHERE UserId = %d AND BookId = %d", $u, $id);
+        $r .= "<span style='color:green;'>Книга $id удалена из списка наблюдения.</span><br><br>";
+      }
+      break;
+  }
+  $r .= "<h3>Наблюдаемые книги</h3>";
+  $r .= "<br><form method=POST action=/polka/watch/add>BookId: <input name=id size=15/>&nbsp;<input type=submit value='Добавить'/></form><br>";
+  $sth = SELECT ("b.BookId, Title, Deleted FROM libbookwatch bw, libbook b WHERE bw.UserId = %d AND bw.BookId = b.BookId", $u);
+  while ($a1 = dbf($sth)) {
+    $r .= "<a href=/polka/watch/del/$a1->BookId>[-]</a>&nbsp;<a href=/b/$a1->BookId>$a1->Title</a>";
+    if ($a1->Deleted & 1) {
+      $goodid = Sel("GoodId FROM libjoinedbooks WHERE BadId = %d", $a1->BookId);
+      if (!$goodid)
+        $r .= " - удалена";
+      else {
+        $title2 = Sel("Title FROM libbook WHERE BookId = %d", $goodid);
+        $r .= " - заменена на <a href=/b/$goodid>$title2</a>";
+      }
+    }
+    $r .= "<br>";
+  }
+  return $r;
 }
 
